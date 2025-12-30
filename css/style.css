@@ -1,0 +1,21 @@
+/* Tổng thể */
+body { display: flex; height: 100vh; margin: 0; background: #f4f6f9; font-family: sans-serif; }
+.sidebar { width: 250px; background: #1a2a3a; color: white; }
+.main-content { flex: 1; padding: 30px; overflow-y: auto; }
+.sidebar-header { padding-left: 20px;}
+
+/* Menu */
+.menu-item { padding: 15px; cursor: pointer; border-bottom: 1px solid #2c3e50; }
+.menu-item.active { background: #2ecc71; color: white; }
+
+/* Các Section */
+.content-section { display: none; }
+.content-section.active { display: block; }
+
+/* UI mẫu */
+.box { background: white; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.btn-green { background: #2ecc71; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.map-box { height: 400px; background: #ddd; margin-bottom: 20px; border-radius: 8px; }
+
+.content-section { display: none; }
+.content-section.active { display: block; } /* Màn hình đầu tiên muốn hiện thì thêm class active */
