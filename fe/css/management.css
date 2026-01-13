@@ -1,0 +1,133 @@
+.management-form {
+    margin-bottom: 20px;
+    border-top: 5px solid #2ecc71;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.npk-group input {
+    background: #f0fdf4;
+    border: 1px solid #2ecc71;
+}
+
+input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Table */
+/* --- BẢNG DỮ LIỆU --- */
+.crop-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    table-layout: fixed;
+    /* 👈 QUAN TRỌNG: Giúp cột không bị giãn lung tung theo nội dung */
+}
+
+.crop-table th,
+.crop-table td {
+    border: 1px solid #eee;
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+    /* Căn giữa theo chiều dọc */
+    word-wrap: break-word;
+    /* Tự xuống dòng nếu chữ quá dài */
+}
+
+.crop-table th {
+    background: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    white-space: nowrap;
+    /* Tiêu đề không xuống dòng */
+}
+
+/* --- CHỈNH SCALE TỪNG CỘT --- */
+/* Cột 1: Tên cây (Nhỏ) */
+.crop-table th:nth-child(1),
+.crop-table td:nth-child(1) {
+    width: 8%;
+}
+
+/* Cột 2: Ngày (Vừa) */
+.crop-table th:nth-child(2),
+.crop-table td:nth-child(2) {
+    width: 10%;
+    font-size: 0.9em;
+}
+
+/* Cột 3: Diện tích (Nhỏ) */
+.crop-table th:nth-child(3),
+.crop-table td:nth-child(3) {
+    width: 8%;
+}
+
+/* Cột 4: NPK (Vừa) */
+.crop-table th:nth-child(4),
+.crop-table td:nth-child(4) {
+    width: 12%;
+    font-size: 0.9em;
+}
+
+/* Cột 5: SL Mong muốn (Nhỏ) */
+.crop-table th:nth-child(5),
+.crop-table td:nth-child(5) {
+    width: 8%;
+    text-align: center;
+}
+
+/* Cột 6: AI Dự đoán (LỚN NHẤT) */
+.crop-table th:nth-child(6),
+.crop-table td:nth-child(6) {
+    width: 35%;
+    /* Dành 35% chiều rộng bảng cho cột này */
+    font-size: 0.9rem;
+    /* Chữ nhỏ lại một chút cho gọn */
+    color: #444;
+    line-height: 1.4;
+    text-align: justify;
+    /* Căn đều 2 bên nhìn cho đẹp */
+}
+
+/* Cột 7: Hành động (Vừa đủ nút bấm) */
+.crop-table th:nth-child(7),
+.crop-table td:nth-child(7) {
+    width: 15%;
+    text-align: center;
+}
+
+/* Nút bấm gọn lại xíu */
+.btn-predict,
+.btn-delete {
+    padding: 6px 10px;
+    margin: 2px;
+    font-size: 0.85em;
+}
+
+.btn-predict {
+    background: #f39c12;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}

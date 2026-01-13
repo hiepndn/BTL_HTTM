@@ -1,3 +1,107 @@
+// --- LOGIC AUTHENTICATION (Đăng nhập/Đăng ký) ---
+let isLoginMode = true; // Mặc định là chế độ đăng nhập
+
+// 1. Kiểm tra xem đã đăng nhập chưa khi mới vào web
+function checkLoginStatus() {
+    const user = localStorage.getItem('user_info');
+    if (user) {
+        // Đã đăng nhập -> Hiện App, Ẩn Login
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'flex'; // Flex để chia cột sidebar
+        
+        const userData = JSON.parse(user);
+        document.getElementById('user-display').innerText = `Xin chào, ${userData.username}`;
+        
+        // Khởi chạy App
+        initMenu();
+        loadModule('dashboard');
+    } else {
+        // Chưa đăng nhập -> Hiện Login
+        document.getElementById('auth-screen').style.display = 'flex';
+        document.getElementById('main-app').style.display = 'none';
+    }
+}
+
+// 2. Chuyển đổi giữa Đăng nhập <-> Đăng ký
+function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+    const title = document.getElementById('auth-title');
+    const btn = document.querySelector('.auth-box button');
+    const switchText = document.getElementById('switch-text');
+    const link = document.querySelector('.auth-switch a');
+    const errorMsg = document.getElementById('auth-error');
+
+    errorMsg.style.display = 'none'; // Xóa lỗi cũ
+
+    if (isLoginMode) {
+        title.innerText = "Đăng nhập Nông Trại";
+        btn.innerText = "Đăng nhập";
+        switchText.innerText = "Chưa có tài khoản?";
+        link.innerText = "Đăng ký ngay";
+    } else {
+        title.innerText = "Đăng ký Tài khoản";
+        btn.innerText = "Đăng ký";
+        switchText.innerText = "Đã có tài khoản?";
+        link.innerText = "Đăng nhập ngay";
+    }
+}
+
+// 3. Xử lý khi bấm nút (Gọi API)
+async function handleAuth() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const errorMsg = document.getElementById('auth-error');
+
+    if (!username || !password) {
+        errorMsg.innerText = "Vui lòng nhập đầy đủ thông tin!";
+        errorMsg.style.display = 'block';
+        return;
+    }
+
+    const endpoint = isLoginMode ? '/login' : '/register';
+    const apiUrl = `http://localhost:3000/api/auth${endpoint}`;
+
+    try {
+        const res = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            if (isLoginMode) {
+                // Đăng nhập thành công -> Lưu vào LocalStorage
+                localStorage.setItem('user_info', JSON.stringify(data.user));
+                checkLoginStatus(); // Vào app
+            } else {
+                // Đăng ký thành công -> Chuyển sang form đăng nhập
+                alert("Đăng ký thành công! Hãy đăng nhập.");
+                toggleAuthMode();
+            }
+        } else {
+            errorMsg.innerText = data.message;
+            errorMsg.style.display = 'block';
+        }
+    } catch (err) {
+        console.error(err);
+        errorMsg.innerText = "Lỗi kết nối Server!";
+        errorMsg.style.display = 'block';
+    }
+}
+
+// 4. Đăng xuất
+function logout() {
+    if(confirm("Bạn có muốn đăng xuất?")) {
+        localStorage.removeItem('user_info');
+        location.reload(); // Tải lại trang để về màn hình login
+    }
+}
+
+// --- KHỞI CHẠY ---
+// Thay thế đoạn gọi initMenu() cũ ở cuối file bằng dòng này:
+checkLoginStatus();
+
 // Cấu hình: Màn hình mặc định và trạng thái đã tải hay chưa
 const modules = {
     'dashboard': { loaded: false, file: 'components/dashboard.html' },

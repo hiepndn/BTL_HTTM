@@ -1,3 +1,4 @@
+// be/database.js
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 
@@ -10,7 +11,8 @@ async function openDb() {
 
 async function initDb() {
   const db = await openDb();
-  // Tạo bảng nếu chưa có
+  
+  // Bảng cây trồng (Cũ)
   await db.exec(`
     CREATE TABLE IF NOT EXISTS crops (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,9 +26,18 @@ async function initDb() {
       ai_prediction TEXT
     )
   `);
+
+  // 👇 BẢNG USER (MỚI) 👇
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE,
+      password TEXT
+    )
+  `);
+
   return db;
 }
 
-initDb(); // Chạy khởi tạo ngay khi server bật
-
+initDb();
 module.exports = openDb;
