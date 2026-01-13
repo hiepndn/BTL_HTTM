@@ -1,0 +1,32 @@
+<section id="recommendation" class="content-section active">
+    <h3>🌱 Gợi ý cây trồng (AI Map)</h3>
+    
+    <div class="box recommendation-box">
+        <div class="map-container">
+            <div id="map"></div>
+            <p class="note">📍 Click vào bản đồ để AI phân tích.</p>
+        </div>
+
+        <div class="result-container">
+            <h4>Kết quả phân tích</h4>
+            
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Gemini đang suy nghĩ...</p>
+            </div>
+
+            <div id="result-content" style="display: none;">
+                <div class="env-info">
+                    <p>🌤 <b>Khí hậu:</b> <span id="res-climate">--</span></p>
+                    <p>🌡 <b>Nhiệt độ:</b> <span id="res-temp">--</span></p>
+                    <p>🟤 <b>Đất đai:</b> <span id="res-soil">--</span></p>
+                </div>
+                <h5>💡 Cây trồng phù hợp:</h5>
+                <div id="crop-list"></div>
+            </div>
+            
+            <div id="placeholder">Chưa có dữ liệu. Hãy chọn vị trí.</div>
+        </div>
+    </div>
+
+</section>
