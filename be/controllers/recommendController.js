@@ -8,7 +8,7 @@ exports.analyzeArea = async (req, res) => {
         const { lat, lng } = req.body;
         
         // Cấu hình Model
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
         // Prompt bắt buộc AI trả về JSON
         const prompt = `
