@@ -1,5 +1,26 @@
-<section id="youtube" class="content-section active" style="display: none;">
-    <h3>Youtube</h3>
-    <div class="box">
+<section id="youtube" class="content-section">
+    <h3>📺 Youtube - Hướng dẫn trồng cây</h3>
+    <div class="youtube-container">
+        <div class="yt-search-box">
+            <input type="text" id="yt-keyword" placeholder="Nhập tên cây cần tìm (VD: Cây táo)...">
+            <div class="yt-buttons">
+                <button class="btn-info" onclick="handleSearch('info')">ℹ️ Thông tin cây</button>
+                <button class="btn-guide" onclick="handleSearch('guide')">🌱 Hướng dẫn trồng</button>
+            </div>
+        </div>
+
+        <div id="yt-loading" style="display: none; text-align: center; margin-top: 20px;">
+            <div class="spinner"></div>
+            <p>Đang tải video từ YouTube...</p>
+        </div>
+
+        <div id="yt-text-instruction" class="instruction-box" style="display: none;">
+            <h3>📖 Hướng dẫn nhanh:</h3>
+            <p id="instruction-content">Nội dung hướng dẫn sẽ hiện ở đây...</p>
+        </div>
+
+        <div class="video-grid-header">Video hướng dẫn (YouTube):</div>
+        <div id="yt-results" class="video-grid">
+            </div>
     </div>
 </section>

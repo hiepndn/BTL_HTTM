@@ -1,0 +1,111 @@
+/* Container chính */
+.youtube-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Thanh tìm kiếm đẹp */
+.yt-search-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.yt-search-box input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    max-width: 500px;
+}
+
+.yt-buttons button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    transition: 0.3s;
+}
+
+.btn-info { background: #3498db; }
+.btn-info:hover { background: #2980b9; }
+
+.btn-guide { background: #2ecc71; }
+.btn-guide:hover { background: #27ae60; }
+
+/* Khu vực text hướng dẫn */
+.instruction-box {
+    background: #fff3cd; /* Màu vàng nhạt giống ảnh */
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 5px solid #ffc107;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* Lưới Video (Grid System) */
+.video-grid-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    border-left: 4px solid #c0392b; /* Màu đỏ Youtube */
+    padding-left: 10px;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Tự động chia cột */
+    gap: 20px;
+}
+
+/* Thẻ Video (Card) */
+.video-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.video-thumb {
+    width: 100%;
+    aspect-ratio: 16/9; /* Tỉ lệ chuẩn Youtube */
+    object-fit: cover;
+}
+
+.video-info {
+    padding: 10px;
+}
+
+.video-title {
+    font-size: 0.95em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Cắt chữ nếu quá dài 2 dòng */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #333;
+}
+
+.channel-name {
+    font-size: 0.85em;
+    color: #777;
+}

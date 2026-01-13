@@ -126,6 +126,7 @@ async function loadModule(moduleName) {
         if (moduleName === 'management') {
             initManagement();
         }
+        if (moduleName === 'youtube') initYoutube();
         return;
     }
 
@@ -158,6 +159,11 @@ async function loadModule(moduleName) {
         if (moduleName === 'management') {
             setTimeout(() => {
                 initManagement(); 
+            }, 100);
+        }
+        if (moduleName === 'youtube') {
+            setTimeout(() => {
+                initYoutube(); 
             }, 100);
         }
 
@@ -389,6 +395,109 @@ async function predictYield(id, name, area, n, p, k) {
     } finally {
         btn.innerText = originalText;
         btn.disabled = false;
+    }
+}
+
+// ==========================================
+// LOGIC YOUTUBE (Dán xuống cuối main.js)
+// ==========================================
+
+const YOUTUBE_API_KEY = 'đã ẩn';
+
+function initYoutube() {
+    console.log("Youtube Tab Loaded");
+    // Bắt sự kiện phím Enter
+    const input = document.getElementById('yt-keyword');
+    if (input) {
+        input.onkeypress = function(e) {
+            if (e.key === "Enter") handleSearch('guide');
+        };
+    }
+}
+
+async function handleSearch(type) {
+    const input = document.getElementById('yt-keyword');
+    const query = input.value.trim();
+    
+    if (!query) {
+        alert("Vui lòng nhập tên cây!");
+        return;
+    }
+
+    let keyword = query;
+    let guideText = "";
+
+    // Tùy chỉnh từ khóa tìm kiếm cho chuẩn xác
+    if (type === 'guide') {
+        keyword = `Cách trồng cây ${query} hiệu quả`;
+        guideText = `Video hướng dẫn kỹ thuật trồng <b>${query}</b>:`;
+    } else {
+        keyword = `Giới thiệu đặc điểm cây ${query}`;
+        guideText = `Thông tin tổng quan về <b>${query}</b>:`;
+    }
+
+    // Hiển thị box hướng dẫn
+    const textInst = document.getElementById('yt-text-instruction');
+    const contentInst = document.getElementById('instruction-content');
+    if (textInst && contentInst) {
+        textInst.style.display = 'block';
+        contentInst.innerHTML = guideText;
+    }
+
+    await callYoutubeAPI(keyword);
+}
+
+async function callYoutubeAPI(keyword) {
+    const loading = document.getElementById('yt-loading');
+    const resultsDiv = document.getElementById('yt-results');
+    
+    if(loading) loading.style.display = 'block';
+    if(resultsDiv) resultsDiv.innerHTML = '';
+
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=9&q=${encodeURIComponent(keyword)}&type=video&key=${YOUTUBE_API_KEY}`;
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if(loading) loading.style.display = 'none';
+
+        if (data.error) {
+            console.error(data.error);
+            alert("Lỗi API Youtube: " + data.error.message);
+            return;
+        }
+
+        if (!data.items || data.items.length === 0) {
+            resultsDiv.innerHTML = '<p>Không tìm thấy video nào.</p>';
+            return;
+        }
+
+        // Vẽ video ra màn hình
+        data.items.forEach(item => {
+            const videoId = item.id.videoId;
+            const snip = item.snippet;
+            
+            const div = document.createElement('div');
+            div.className = 'video-card';
+            div.onclick = function() {
+                window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+            };
+
+            div.innerHTML = `
+                <img src="${snip.thumbnails.medium.url}" class="video-thumb">
+                <div class="video-info">
+                    <div class="video-title">${snip.title}</div>
+                    <div style="font-size: 0.8em; color: #666">👤 ${snip.channelTitle}</div>
+                </div>
+            `;
+            resultsDiv.appendChild(div);
+        });
+
+    } catch (err) {
+        console.error(err);
+        if(loading) loading.style.display = 'none';
+        alert("Lỗi kết nối!");
     }
 }
 
