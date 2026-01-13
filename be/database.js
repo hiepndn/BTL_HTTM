@@ -16,6 +16,7 @@ async function initDb() {
   await db.exec(`
     CREATE TABLE IF NOT EXISTS crops (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
       name TEXT,
       start_date TEXT,
       area REAL,

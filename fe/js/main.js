@@ -310,7 +310,13 @@ function initManagement() {
 
 // 1. Lấy danh sách từ Server
 async function loadCrops() {
-    const res = await fetch('http://localhost:3000/api/manager/list');
+    const userStr = localStorage.getItem('user_info');
+    if (!userStr) return; // Chưa đăng nhập thì thôi
+    const user = JSON.parse(userStr);
+    const userId = user.id; // 👈 Lấy ID user (lưu ý: lúc login backend phải trả về id nhé)
+
+    // 2. Gửi userId lên server qua query param (?userId=...)
+    const res = await fetch(`http://localhost:3000/api/manager/list?userId=${userId}`);
     const crops = await res.json();
     
     const tbody = document.getElementById('crop-table-body');
@@ -337,7 +343,9 @@ async function loadCrops() {
 
 // 2. Thêm mới
 async function addCrop() {
+    const user = JSON.parse(localStorage.getItem('user_info'));
     const data = {
+        user_id: user.id,
         name: document.getElementById('crop-name').value,
         area: document.getElementById('crop-area').value,
         start_date: document.getElementById('crop-date').value,
