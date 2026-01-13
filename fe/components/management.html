@@ -1,5 +1,38 @@
-<section id="management" class="content-section active" style="display: none;">
-    <h3>📝 Quản lý Mùa vụ</h3>
+<section id="management" class="content-section active">
+    <h3>📝 Quản lý Mùa vụ & Dự đoán Năng suất</h3>
+    
+    <div class="box management-form">
+        <h4>Thêm mùa vụ mới</h4>
+        <div class="form-grid">
+            <input type="text" id="crop-name" placeholder="Tên cây (VD: Lúa, Ngô)">
+            <input type="number" id="crop-area" placeholder="Diện tích (ha)">
+            <input type="date" id="crop-date">
+            <input type="text" id="crop-yield" placeholder="Sản lượng mong muốn (tấn)">
+        </div>
+        <div class="form-grid npk-group">
+            <input type="number" id="n-val" placeholder="N (Nitơ)">
+            <input type="number" id="p-val" placeholder="P (Phốt pho)">
+            <input type="number" id="k-val" placeholder="K (Kali)">
+            <button type="button" class="btn-green" onclick="addCrop()">➕ Thêm mùa vụ</button>
+        </div>
+    </div>
+
     <div class="box">
+        <h4>Danh sách mùa vụ</h4>
+        <table class="crop-table">
+            <thead>
+                <tr>
+                    <th>Tên cây</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Diện tích</th>
+                    <th>NPK</th>
+                    <th>SL Mong muốn</th>
+                    <th>AI Dự đoán</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="crop-table-body">
+                </tbody>
+        </table>
     </div>
 </section>

@@ -3,15 +3,18 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config();
 
+
 // Middleware
 app.use(cors()); // Cho phép Frontend gọi API
 app.use(express.json()); // Đọc được dữ liệu JSON gửi lên
 
 // Import Routes
 const recommendRoutes = require('./routes/recommendRoutes');
+const managerRoutes = require('./routes/managerRoutes');
 
 // Sử dụng Routes
 app.use('/api/recommend', recommendRoutes);
+app.use('/api/manager', managerRoutes);
 
 // Chạy server
 const PORT = process.env.PORT || 3000;

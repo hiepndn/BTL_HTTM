@@ -19,6 +19,9 @@ async function loadModule(moduleName) {
         if (moduleName === 'recommendation') {
             initRecommendationMap();
         }
+        if (moduleName === 'management') {
+            initManagement();
+        }
         return;
     }
 
@@ -46,6 +49,11 @@ async function loadModule(moduleName) {
             // Delay nhẹ 100ms để HTML kịp render vào DOM
             setTimeout(() => {
                 initRecommendationMap();
+            }, 100);
+        }
+        if (moduleName === 'management') {
+            setTimeout(() => {
+                initManagement(); 
             }, 100);
         }
 
@@ -181,6 +189,102 @@ function displayAIResult(data) {
         });
     } else {
         listDiv.innerHTML = "<p>Không có gợi ý phù hợp.</p>";
+    }
+}
+
+// --- LOGIC QUẢN LÝ (MANAGEMENT) ---
+
+function initManagement() {
+    loadCrops(); // Tải danh sách ngay khi vào tab
+}
+
+// 1. Lấy danh sách từ Server
+async function loadCrops() {
+    const res = await fetch('http://localhost:3000/api/manager/list');
+    const crops = await res.json();
+    
+    const tbody = document.getElementById('crop-table-body');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+
+    crops.forEach(crop => {
+        tbody.innerHTML += `
+            <tr>
+                <td><b>${crop.name}</b></td>
+                <td>${crop.start_date}</td>
+                <td>${crop.area} ha</td>
+                <td><span style="color:green">N:${crop.n_index}</span> - P:${crop.p_index} - K:${crop.k_index}</td>
+                <td>${crop.expected_yield}</td>
+                <td style="color: #d35400; font-weight: bold;">${crop.ai_prediction || 'Chưa dự đoán'}</td>
+                <td>
+                    <button type="button" class="btn-predict" onclick="predictYield(${crop.id}, '${crop.name}', ${crop.area}, ${crop.n_index}, ${crop.p_index}, ${crop.k_index})"> Dự đoán</button>
+                    <button class="btn-delete" onclick="deleteCrop(${crop.id})">🗑 Xóa</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// 2. Thêm mới
+async function addCrop() {
+    const data = {
+        name: document.getElementById('crop-name').value,
+        area: document.getElementById('crop-area').value,
+        start_date: document.getElementById('crop-date').value,
+        expected: document.getElementById('crop-yield').value,
+        n: document.getElementById('n-val').value,
+        p: document.getElementById('p-val').value,
+        k: document.getElementById('k-val').value
+    };
+
+    if(!data.name || !data.area) return alert("Vui lòng nhập tên và diện tích!");
+
+    await fetch('http://localhost:3000/api/manager/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    // Reset form và tải lại bảng
+    document.getElementById('crop-name').value = '';
+    loadCrops();
+}
+
+// 3. Xóa
+async function deleteCrop(id) {
+    if(!confirm("Bạn chắc chắn muốn xóa?")) return;
+    await fetch(`http://localhost:3000/api/manager/delete/${id}`, { method: 'DELETE' });
+    loadCrops();
+}
+
+// 4. Gọi AI Dự đoán
+async function predictYield(id, name, area, n, p, k) {
+    // Hiện loading tạm thời
+    const btn = event.target;
+    const originalText = btn.innerText;
+    btn.innerText = "⏳ Đang tính...";
+    btn.disabled = true;
+
+    try {
+        const res = await fetch('http://localhost:3000/api/manager/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, name, area, n, p, k })
+        });
+        const data = await res.json();
+        
+        if(data.success) {
+            alert(`AI Dự đoán: ${data.prediction}`);
+            loadCrops(); // Load lại bảng để hiện kết quả lưu trong DB
+        } else {
+            alert("Lỗi AI");
+        }
+    } catch(e) {
+        console.error(e);
+        alert("Lỗi kết nối");
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
     }
 }
 

@@ -108,3 +108,207 @@ body { display: flex; height: 100vh; margin: 0; background: #f4f6f9; font-family
 #map { width: 100%; height: 95%; border-radius: 8px; z-index: 1;}
 .spinner { /* Bạn có thể thêm css xoay tròn ở đây nếu thích */ width: 20px; height: 20px; border: 3px solid #ccc; border-top-color: blue; border-radius: 50%; animation: spin 1s infinite linear; margin: 0 auto;}
 @keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* tab manager */
+/* Management Form */
+.management-form { margin-bottom: 20px; border-top: 5px solid #2ecc71; }
+.form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
+.npk-group input { background: #f0fdf4; border: 1px solid #2ecc71; }
+input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; box-sizing: border-box; }
+
+/* Table */
+/* --- BẢNG DỮ LIỆU --- */
+.crop-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 10px;
+    table-layout: fixed; /* 👈 QUAN TRỌNG: Giúp cột không bị giãn lung tung theo nội dung */
+}
+
+.crop-table th, .crop-table td { 
+    border: 1px solid #eee; 
+    padding: 10px; 
+    text-align: left; 
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    word-wrap: break-word; /* Tự xuống dòng nếu chữ quá dài */
+}
+
+.crop-table th { 
+    background: #f8f9fa; 
+    color: #333; 
+    font-weight: 600;
+    white-space: nowrap; /* Tiêu đề không xuống dòng */
+}
+
+/* --- CHỈNH SCALE TỪNG CỘT --- */
+/* Cột 1: Tên cây (Nhỏ) */
+.crop-table th:nth-child(1), .crop-table td:nth-child(1) { width: 8%; }
+
+/* Cột 2: Ngày (Vừa) */
+.crop-table th:nth-child(2), .crop-table td:nth-child(2) { width: 10%; font-size: 0.9em; }
+
+/* Cột 3: Diện tích (Nhỏ) */
+.crop-table th:nth-child(3), .crop-table td:nth-child(3) { width: 8%; }
+
+/* Cột 4: NPK (Vừa) */
+.crop-table th:nth-child(4), .crop-table td:nth-child(4) { width: 12%; font-size: 0.9em; }
+
+/* Cột 5: SL Mong muốn (Nhỏ) */
+.crop-table th:nth-child(5), .crop-table td:nth-child(5) { width: 8%; text-align: center; }
+
+/* Cột 6: AI Dự đoán (LỚN NHẤT) */
+.crop-table th:nth-child(6), .crop-table td:nth-child(6) { 
+    width: 35%; /* Dành 35% chiều rộng bảng cho cột này */
+    font-size: 0.9rem; /* Chữ nhỏ lại một chút cho gọn */
+    color: #444;
+    line-height: 1.4;
+    text-align: justify; /* Căn đều 2 bên nhìn cho đẹp */
+}
+
+/* Cột 7: Hành động (Vừa đủ nút bấm) */
+.crop-table th:nth-child(7), .crop-table td:nth-child(7) { 
+    width: 15%; 
+    text-align: center; 
+}
+
+/* Nút bấm gọn lại xíu */
+.btn-predict, .btn-delete {
+    padding: 6px 10px;
+    margin: 2px;
+    font-size: 0.85em;
+}
+
+.btn-predict { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+.btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+
+/* --- GIAO DIỆN RECOMMENDATION (MỚI) --- */
+
+.recommendation-box {
+    display: flex;
+    gap: 0; /* Bỏ khoảng cách để map liền mạch hơn */
+    height: 600px; /* Cao hơn chút cho đẹp */
+    padding: 0; /* Bỏ padding của .box mặc định để map tràn viền */
+    overflow: hidden; /* Bo tròn góc */
+}
+
+/* 1. Cột Bản Đồ */
+.map-wrapper {
+    flex: 2; /* Chiếm 66% chiều rộng */
+    position: relative;
+    border-right: 1px solid #eee;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.map-instruction {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #2c3e50;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 2. Cột Kết Quả (Sidebar) */
+.result-sidebar {
+    flex: 1; /* Chiếm 33% chiều rộng */
+    background: #fdfdfd;
+    padding: 20px;
+    overflow-y: auto; /* Cho phép cuộn dọc */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Các trạng thái (Loading, Placeholder) */
+.state-box {
+    text-align: center;
+    margin-top: 50%;
+    transform: translateY(-50%);
+    color: #7f8c8d;
+}
+.empty-icon { font-size: 3em; margin-bottom: 10px; opacity: 0.5; }
+
+/* Grid thông số môi trường */
+.env-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Xếp dọc cho mobile, nhưng desktop vẫn đẹp */
+    gap: 10px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid #eee;
+    transition: transform 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+
+/* Màu sắc từng thẻ stat */
+.stat-card.climate { border-left: 4px solid #f1c40f; } /* Vàng */
+.stat-card.temp { border-left: 4px solid #e74c3c; }    /* Đỏ */
+.stat-card.soil { border-left: 4px solid #795548; }    /* Nâu */
+
+.stat-card .icon { font-size: 1.5em; margin-right: 15px; width: 30px; text-align: center; }
+.stat-card .info label { display: block; font-size: 0.75em; color: #95a5a6; text-transform: uppercase; }
+.stat-card .info span { font-weight: bold; color: #2c3e50; font-size: 0.95em; }
+
+.section-title {
+    font-size: 0.9em;
+    color: #95a5a6;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+/* Thẻ Cây Trồng (Crop Card) */
+.crop-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modern-crop-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.modern-crop-card:hover {
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.2);
+    border-color: #2ecc71;
+}
+
+.modern-crop-card h6 {
+    margin: 0 0 5px 0;
+    color: #27ae60;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.modern-crop-card p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.4;
+}
+
+/* Spinner */
+.spinner { width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #2ecc71; border-radius: 50%; animation: spin 1s infinite linear; margin: 0 auto 10px; }

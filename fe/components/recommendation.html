@@ -2,31 +2,53 @@
     <h3>🌱 Gợi ý cây trồng (AI Map)</h3>
     
     <div class="box recommendation-box">
-        <div class="map-container">
+        <div class="map-wrapper">
             <div id="map"></div>
-            <p class="note">📍 Click vào bản đồ để AI phân tích.</p>
+            <div class="map-instruction">📍 Click chọn vị trí trên bản đồ</div>
         </div>
 
-        <div class="result-container">
-            <h4>Kết quả phân tích</h4>
+        <div class="result-sidebar">
             
-            <div id="loading" style="display: none;">
+            <div id="placeholder" class="state-box">
+                <div class="empty-icon">🗺️</div>
+                <p>Chưa có dữ liệu phân tích.<br>Vui lòng chọn một điểm trên bản đồ.</p>
+            </div>
+
+            <div id="loading" class="state-box" style="display: none;">
                 <div class="spinner"></div>
-                <p>Gemini đang suy nghĩ...</p>
+                <p>Gemini đang phân tích vệ tinh & thổ nhưỡng...</p>
             </div>
 
             <div id="result-content" style="display: none;">
-                <div class="env-info">
-                    <p>🌤 <b>Khí hậu:</b> <span id="res-climate">--</span></p>
-                    <p>🌡 <b>Nhiệt độ:</b> <span id="res-temp">--</span></p>
-                    <p>🟤 <b>Đất đai:</b> <span id="res-soil">--</span></p>
+                <h5 class="section-title">🌍 Môi trường tự nhiên</h5>
+                <div class="env-stats-grid">
+                    <div class="stat-card climate">
+                        <span class="icon">🌤</span>
+                        <div class="info">
+                            <label>Khí hậu</label>
+                            <span id="res-climate">--</span>
+                        </div>
+                    </div>
+                    <div class="stat-card temp">
+                        <span class="icon">🌡</span>
+                        <div class="info">
+                            <label>Nhiệt độ</label>
+                            <span id="res-temp">--</span>
+                        </div>
+                    </div>
+                    <div class="stat-card soil">
+                        <span class="icon">🌱</span>
+                        <div class="info">
+                            <label>Loại đất</label>
+                            <span id="res-soil">--</span>
+                        </div>
+                    </div>
                 </div>
-                <h5>💡 Cây trồng phù hợp:</h5>
-                <div id="crop-list"></div>
+
+                <h5 class="section-title" style="margin-top: 20px;">💡 Cây trồng tối ưu</h5>
+                <div id="crop-list" class="crop-list-container">
+                    </div>
             </div>
-            
-            <div id="placeholder">Chưa có dữ liệu. Hãy chọn vị trí.</div>
         </div>
     </div>
-
 </section>
