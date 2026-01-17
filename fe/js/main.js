@@ -277,28 +277,50 @@ async function callBackendAI(lat, lng) {
     }
 }
 
-function displayAIResult(data) {
+function displayAIResult(fullData) {
+    const weatherData = fullData.weather; // Mảng 5 ngày
+    const aiData = fullData.ai;           // Dữ liệu AI phân tích
+
     const resultEl = document.getElementById('result-content');
     if(resultEl) resultEl.style.display = 'block';
-    
-    document.getElementById('res-climate').innerText = data.climate || "Không rõ";
-    document.getElementById('res-temp').innerText = data.temp || "--";
-    document.getElementById('res-soil').innerText = data.soil || "Không rõ";
 
+    // 1. Hiển thị Dự báo thời tiết (Vẽ HTML cho 5 ô)
+    const weatherGrid = document.getElementById('weather-grid');
+    weatherGrid.innerHTML = ''; // Xóa cũ
+    
+    weatherData.forEach(day => {
+        const date = new Date(day.dt * 1000); // Đổi timestamp sang ngày
+        const dayName = `${date.getDate()}/${date.getMonth()+1}`;
+        const iconCode = day.weather[0].icon;
+        const temp = Math.round(day.main.temp);
+        
+        weatherGrid.innerHTML += `
+            <div class="weather-card">
+                <div class="w-date">${dayName}</div>
+                <img src="https://openweathermap.org/img/wn/${iconCode}.png" width="40">
+                <div class="w-temp">${temp}°C</div>
+                <div class="w-desc">${day.weather[0].description}</div>
+            </div>
+        `;
+    });
+
+    // 2. Hiển thị thông tin AI
+    document.getElementById('res-analysis').innerText = aiData.analysis_text || "Không có đánh giá";
+    document.getElementById('res-soil').innerText = aiData.soil_guess || "Chưa xác định";
+
+    // 3. Hiển thị cây trồng
     const listDiv = document.getElementById('crop-list');
     listDiv.innerHTML = '';
     
-    if (data.crops && data.crops.length > 0) {
-        data.crops.forEach(crop => {
+    if (aiData.crops && aiData.crops.length > 0) {
+        aiData.crops.forEach(crop => {
             listDiv.innerHTML += `
-                <div class="crop-item" style="border-left: 3px solid green; padding-left: 10px; margin-bottom: 10px; background: #fff;">
-                    <strong>${crop.name}</strong>
-                    <p style="margin: 0; font-size: 0.9em; color: #666;">${crop.desc}</p>
+                <div class="crop-item" style="border-left: 4px solid #2ecc71; padding: 10px; margin-bottom: 8px; background: white; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <strong style="color: #27ae60;">${crop.name}</strong>
+                    <p style="margin: 4px 0 0; font-size: 0.9em; color: #555;">${crop.desc}</p>
                 </div>
             `;
         });
-    } else {
-        listDiv.innerHTML = "<p>Không có gợi ý phù hợp.</p>";
     }
 }
 

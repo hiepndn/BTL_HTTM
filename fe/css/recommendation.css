@@ -333,3 +333,40 @@
     animation: spin 1s infinite linear;
     margin: 0 auto 10px;
 }
+
+/* Grid cho 5 ngày thời tiết */
+.weather-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Chia đều 5 cột */
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.weather-card {
+    background: #e3f2fd; /* Xanh nhạt */
+    border-radius: 8px;
+    padding: 8px 4px;
+    text-align: center;
+    border: 1px solid #bbdefb;
+}
+
+.w-date {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #1565c0;
+    margin-bottom: 2px;
+}
+
+.w-temp {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #d35400;
+}
+
+.w-desc {
+    font-size: 0.7em;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
