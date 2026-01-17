@@ -1,149 +1,120 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <title>Nông nghiệp thông minh</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<section id="dashboard" class="content-section">
+    <style>
+        /* Scoped CSS cho dashboard để tránh ảnh hưởng global */
+        #dashboard .dashboard-header {
+            background: linear-gradient(135deg, #2e7d32, #66bb6a);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+        #dashboard .dashboard-header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
+        #dashboard .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
 
-    body {
-      margin: 0;
-      background: #f4f6f8;
-      color: #333;
-    }
+        #dashboard .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease;
+        }
 
-    header {
-      background: linear-gradient(135deg, #2e7d32, #66bb6a);
-      color: white;
-      padding: 20px 40px;
-    }
+        #dashboard .card:hover {
+            transform: translateY(-6px);
+        }
 
-    header h1 {
-      margin: 0;
-      font-size: 26px;
-    }
+        #dashboard .card h3 {
+            margin-top: 0;
+            font-size: 18px;
+        }
 
-    .container {
-      padding: 30px 40px;
-    }
+        #dashboard .card p {
+            font-size: 14px;
+            color: #666;
+        }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
+        #dashboard .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 18px;
+            background: #2e7d32;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s ease;
+            cursor: pointer;
+        }
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-      transition: transform 0.2s ease;
-    }
+        #dashboard .btn:hover {
+            background: #1b5e20;
+        }
 
-    .card:hover {
-      transform: translateY(-6px);
-    }
+        #dashboard iframe {
+            margin-top: 30px;
+            width: 100%;
+            height: 85vh;
+            border: none;
+            border-radius: 12px;
+            display: none;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
 
-    .card h3 {
-      margin-top: 0;
-      font-size: 18px;
-    }
+        #dashboard footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: #888;
+            margin-top: 20px;
+        }
+    </style>
 
-    .card p {
-      font-size: 14px;
-      color: #666;
-    }
-
-    .btn {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 10px 18px;
-      background: #2e7d32;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      transition: background 0.2s ease;
-    }
-
-    .btn:hover {
-      background: #1b5e20;
-    }
-
-    iframe {
-      margin-top: 30px;
-      width: 100%;
-      height: 85vh;
-      border: none;
-      border-radius: 12px;
-      display: none;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 13px;
-      color: #888;
-    }
-  </style>
-</head>
-<body>
-
-<header>
-  <h1>🌱 Hệ thống nông nghiệp thông minh</h1>
-</header>
-
-<div class="container">
-
-  <div class="cards">
-    <div class="card">
-      <h3>📊 Dashboard phân tích</h3>
-      <p>Theo dõi diện tích, số lượng cây trồng, dinh dưỡng và hiệu suất canh tác.</p>
-      <!-- Mở tab mới -->
-      <a
-        class="btn"
-        href="http://localhost:8088/superset/dashboard/1/?standalone=1"
-        target="_blank"
-        rel="noopener"
-      >
-        Mở Dashboard
-      </a>
+    <div class="dashboard-header">
+        <h1>🌱 Hệ thống nông nghiệp thông minh</h1>
     </div>
 
-    <div class="card">
-      <h3>📈 Xem trong hệ thống</h3>
-      <p>Hiển thị dashboard trực tiếp ngay trên website.</p>
-      <a class="btn" href="#" onclick="loadDashboard()">Xem tại đây</a>
+    <div class="container-fluid">
+        <div class="cards">
+            <div class="card">
+                <h3>📊 Dashboard phân tích</h3>
+                <p>Theo dõi diện tích, số lượng cây trồng, dinh dưỡng và hiệu suất canh tác.</p>
+                <a class="btn" href="http://localhost:8088/superset/dashboard/1/?standalone=1" target="_blank" rel="noopener">
+                    Mở Dashboard (Tab mới)
+                </a>
+            </div>
+
+            <div class="card">
+                <h3>📈 Xem trong hệ thống</h3>
+                <p>Hiển thị dashboard trực tiếp ngay trên website.</p>
+                <button class="btn" onclick="loadDashboardFrame()">Xem tại đây</button>
+            </div>
+        </div>
+
+        <iframe id="dashboardFrame"></iframe>
     </div>
-  </div>
 
-  <!-- Embed dashboard -->
-  <iframe id="dashboardFrame"></iframe>
+    <footer>
+        © 2026 | Smart Agriculture Dashboard
+    </footer>
 
-</div>
-
-<footer>
-  © 2026 | Smart Agriculture Dashboard
-</footer>
-
-<script>
-function loadDashboard() {
-  const iframe = document.getElementById("dashboardFrame");
-  iframe.style.display = "block";
-  iframe.src = "http://localhost:8088/superset/dashboard/1/?standalone=1";
-}
-</script>
-
-</body>
-</html>
+    <script>
+        // Đổi tên hàm để tránh conflict nếu tải nhiều lần
+        function loadDashboardFrame() {
+            const iframe = document.getElementById("dashboardFrame");
+            if (iframe) {
+                iframe.style.display = "block";
+                iframe.src = "http://localhost:8088/superset/dashboard/1/?standalone=1";
+            }
+        }
+    </script>
+</section>
