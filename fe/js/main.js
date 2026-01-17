@@ -1,6 +1,17 @@
 // --- LOGIC AUTHENTICATION (Đăng nhập/Đăng ký) ---
 let isLoginMode = true; // Mặc định là chế độ đăng nhập
 
+const modules = {
+    'weather': { loaded: false, file: 'components/weather.html' },
+    'dashboard': { loaded: false, file: 'components/dashboard.html' },
+    'recommendation': { loaded: false, file: 'components/recommendation.html' },
+    'diagnosis': { loaded: false, file: 'components/diagnosis.html' },
+    'management': { loaded: false, file: 'components/management.html' },
+    'youtube': { loaded: false, file: 'components/youtube.html' }
+};
+
+const container = document.getElementById('content-app');
+
 // 1. Kiểm tra xem đã đăng nhập chưa khi mới vào web
 function checkLoginStatus() {
     const user = localStorage.getItem('user_info');
@@ -14,7 +25,7 @@ function checkLoginStatus() {
         
         // Khởi chạy App
         initMenu();
-        loadModule('dashboard');
+        loadModule('weather');
     } else {
         // Chưa đăng nhập -> Hiện Login
         document.getElementById('auth-screen').style.display = 'flex';
@@ -103,15 +114,16 @@ function logout() {
 checkLoginStatus();
 
 // Cấu hình: Màn hình mặc định và trạng thái đã tải hay chưa
-const modules = {
-    'dashboard': { loaded: false, file: 'components/dashboard.html' },
-    'recommendation': { loaded: false, file: 'components/recommendation.html' },
-    'diagnosis': { loaded: false, file: 'components/diagnosis.html' },
-    'management': { loaded: false, file: 'components/management.html' },
-    'youtube': { loaded: false, file: 'components/youtube.html' }
-};
+// const modules = {
+//     'weather': { loaded: false, file: 'components/weather.html' },
+//     'dashboard': { loaded: false, file: 'components/dashboard.html' },
+//     'recommendation': { loaded: false, file: 'components/recommendation.html' },
+//     'diagnosis': { loaded: false, file: 'components/diagnosis.html' },
+//     'management': { loaded: false, file: 'components/management.html' },
+//     'youtube': { loaded: false, file: 'components/youtube.html' }
+// };
 
-const container = document.getElementById('content-app');
+// const container = document.getElementById('content-app');
 
 // --- HÀM TẢI MODULE (Đã sửa để kích hoạt Map) ---
 async function loadModule(moduleName) {
@@ -127,6 +139,7 @@ async function loadModule(moduleName) {
             initManagement();
         }
         if (moduleName === 'youtube') initYoutube();
+        //if (moduleName === 'weather') initWeather();
         return;
     }
 
@@ -166,7 +179,16 @@ async function loadModule(moduleName) {
                 initYoutube(); 
             }, 100);
         }
-
+        if (moduleName === 'diagnosis') {
+            setTimeout(() => {
+                initDiagnosis(); 
+            }, 100);
+        }
+        if (moduleName === 'weather') {
+            setTimeout(() => {
+                initWeather(); 
+            }, 100);
+        }
     } catch (err) {
         console.error("Không thể tải module:", err);
     }
@@ -432,7 +454,7 @@ async function predictYield(id, name, area, n, p, k) {
 // LOGIC YOUTUBE (Dán xuống cuối main.js)
 // ==========================================
 
-const YOUTUBE_API_KEY = 'đã ẩn';
+const YOUTUBE_API_KEY = 'AIzaSyCRpDh36I2K1LBaSPGCkMAtBtCjsbicdB0';
 
 function initYoutube() {
     console.log("Youtube Tab Loaded");
@@ -531,6 +553,218 @@ async function callYoutubeAPI(keyword) {
     }
 }
 
-// --- KHỞI CHẠY ---
-initMenu();
-loadModule('dashboard'); // Mặc định vào dashboard trước
+// Chuẩn đoán bệnh của cây
+// Thay vì dùng DOMContentLoaded, ta dùng một hàm khởi tạo
+function initDiagnosis() {
+    console.log("Khởi tạo hệ thống chẩn đoán...");
+    const messagesContainer = document.getElementById("messages");
+    const textInput = document.getElementById("textInput");
+    const imageInput = document.getElementById("imageInput");
+    const sendButton = document.getElementById("submitBtn");
+
+    if (!messagesContainer || !textInput || !sendButton) {
+        console.error("Không tìm thấy các thành phần giao diện. Đang thử lại...");
+        // Nếu chưa thấy, đợi 100ms rồi tìm lại (dành cho nạp động content)
+        setTimeout(initDiagnosis, 100);
+        return;
+    }
+
+    function addMessage(text, sender) {
+        const div = document.createElement("div");
+        div.className = `msg ${sender}`;
+        div.innerHTML = text.replace(/\n/g, '<br>');
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    async function handleSend() {
+        const textValue = textInput.value.trim();
+        const imageFile = imageInput.files[0];
+
+        if (!textValue && !imageFile) return;
+
+        // Biến để kiểm tra khi nào hiển thị loading
+        let imageLoaded = false;
+
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgHtml = `<img src="${e.target.result}" style="max-width: 200px; border-radius: 8px; margin-top: 8px;">`;
+                addMessage(imgHtml, "user");
+                imageLoaded = true;
+                
+                if (!textValue) {
+                    showLoading();
+                }
+            };
+            reader.readAsDataURL(imageFile);
+        }
+        
+        if (textValue) {
+            addMessage(textValue, "user");
+            if (!imageFile) {
+                showLoading();
+            }
+        }
+
+        textInput.value = "";
+        imageInput.value = "";
+
+        // Hàm hiển thị loading
+        function showLoading() {
+            const loadingId = "loading-" + Date.now();
+            const loadingMsg = document.createElement("div");
+            loadingMsg.className = "msg bot";
+            loadingMsg.id = loadingId;
+            loadingMsg.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <div class="spinner-small"></div>
+                    <span class="dots">...</span>
+                </div>
+            `;
+            messagesContainer.appendChild(loadingMsg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            const formData = new FormData();
+            if (textValue) formData.append("text", textValue);
+            if (imageFile) formData.append("file", imageFile);
+
+            sendRequest(loadingId, formData);
+        }
+
+        // Nếu có cả text và ảnh, đợi ảnh xong rồi hiển thị loading
+        if (textValue && imageFile) {
+            const checkInterval = setInterval(() => {
+                if (imageLoaded) {
+                    clearInterval(checkInterval);
+                    showLoading();
+                }
+            }, 50);
+        }
+    }
+
+    async function sendRequest(loadingId, formData) {
+        try {
+            const response = await fetch("http://localhost:8000/chat-plant", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+            const loader = document.getElementById(loadingId);
+            if (loader) loader.remove();
+
+            let botReply = "";
+            if (data.plant) {
+                botReply += `
+                    <div class="result-box" style="background:#e8f5e9; padding:10px; border-left:4px solid #2e7d32; margin-bottom:10px; border-radius:5px;">
+                        <b>Kết quả:</b> ${data.plant}<br>
+                        <b>Bệnh:</b> ${data.disease}<br>
+                    </div>`;
+            }
+            botReply += `<div>${data.answer}</div>`;
+            addMessage(botReply, "bot");
+            imageInput.value = ""; 
+
+        } catch (error) {
+            const loader = document.getElementById(loadingId);
+            if (loader) loader.remove();
+            addMessage("❌ Lỗi kết nối server FastAPI. Vui lòng kiểm tra Backend.", "bot");
+        }
+    }
+
+    // Gán sự kiện
+    sendButton.onclick = (e) => {
+        e.preventDefault();
+        handleSend();
+    };
+
+    textInput.onkeydown = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    };
+}
+
+async function initWeather() {
+    // Đã đồng bộ ID thành 'weather'
+    const weatherSection = document.getElementById('weather');
+    const aiAdviceElem = document.getElementById('ai-advice');
+    const cardContainer = document.getElementById('forecast-cards');
+    const cityInfoElem = document.getElementById('city-info');
+
+    if (!weatherSection) return;
+
+    try {
+        // Kết nối tới Webhook n8n
+        const response = await fetch('http://localhost:3000/api/weather');;
+        if (!response.ok) throw new Error('Không thể kết nối với n8n');
+        
+        const rawData = await response.json();
+        
+        // 🛠 SỬA LỖI TẠI ĐÂY: Kiểm tra nếu data là mảng thì lấy phần tử đầu tiên
+        const data = Array.isArray(rawData) ? rawData[0] : rawData;
+        console.log("Dữ liệu n8n trả về:", data); 
+
+        if (!data || !data.weather) {
+            throw new Error("Dữ liệu n8n không chứa thông tin 'weather'. Kiểm tra lại Node Respond.");
+        }
+
+        // Lọc dữ liệu 12:00 trưa
+        const weatherList = data.weather.list.filter(item => item.dt_txt.includes("12:00:00"));
+
+        if (cityInfoElem) cityInfoElem.innerText = `Khu vực: ${data.weather.city.name}`;
+        if (aiAdviceElem) aiAdviceElem.innerText = data.ai_answer || "AI đang phân tích...";
+
+        // Hiển thị danh sách thẻ dự báo
+        cardContainer.innerHTML = ''; 
+        weatherList.forEach(day => {
+            const date = new Date(day.dt * 1000).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+            const temp = Math.round(day.main.temp);
+            cardContainer.innerHTML += `
+                <div class="day-card" style="background:#e3f2fd; padding:15px; border-radius:12px; flex:1; text-align:center; min-width:110px; border: 1px solid #bbdefb; margin-right:10px;">
+                    <b style="color:#1976d2;">${date}</b><br>
+                    <span style="font-size:1.2em; font-weight:bold;">${temp}°C</span>
+                    <div style="font-size: 0.8em; color: #555;">💧 ${day.main.humidity}%</div>
+                </div>`;
+        });
+
+        renderWeatherChart(weatherList);
+
+    } catch (error) {
+        console.error("Weather Error:", error);
+        if (aiAdviceElem) aiAdviceElem.innerText = "⚠️ Lỗi: " + error.message;
+    }
+}
+
+// 5. Vẽ biểu đồ nhiệt độ (Sử dụng Chart.js)
+function renderWeatherChart(list) {
+    const canvas = document.getElementById('tempChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    if (window.weatherChartInstance) window.weatherChartInstance.destroy();
+
+    window.weatherChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: list.map(d => new Date(d.dt * 1000).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })),
+            datasets: [{
+                label: 'Nhiệt độ (°C)',
+                data: list.map(d => d.main.temp),
+                borderColor: '#00bcd4',
+                backgroundColor: 'rgba(0, 188, 212, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } }
+        }
+    });
+}

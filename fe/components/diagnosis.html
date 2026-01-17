@@ -1,5 +1,42 @@
-<section id="diagnosis" class="content-section active" style="display: none;">
-    <h3>Chuẩn đoán</h3>
-    <div class="box">
+<section id="diagnosis" class="content-section active">
+    <div class="diagnosis-header">
+        <h2>Chuẩn Đoán Bệnh Cây</h2>
+        <p>Sử dụng AI để nhận diện bệnh cây và nhận tư vấn kỹ thuật chuyên nghiệp</p>
+    </div>
+    
+    <div class="chat-container">
+        <div class="chat-header">
+            <span class="status-dot"></span>
+            <span>Trợ lý AI Chẩn đoán</span>
+        </div>
+        
+        <div class="messages" id="messages">
+            <div class="msg bot">
+                <p>Chào bạn! Tôi là trợ lý AI chuyên biệt trong lĩnh vực phòng chống bệnh cây trồng. Bạn có thể:</p>
+                <ul>
+                    <li>Gửi ảnh cây bị bệnh để tôi nhận diện</li>
+                    <li>Nhận tư vấn kỹ thuật phòng chống</li>
+                    <li>Hỏi về các biện pháp xử lý hiệu quả</li>
+                </ul>
+                <p>Hãy bắt đầu bằng cách gửi ảnh hoặc đặt câu hỏi!</p>
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <div class="input-wrapper">
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                <label class="btn-attach" for="imageInput" title="Gửi ảnh">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 0 19.8 4.3M22 12.5a10 10 0 0 0-19.8-4.2"/>
+                    </svg>
+                </label>
+                <input type="text" id="textInput" placeholder="Nhập câu hỏi hoặc mô tả triệu chứng..." class="text-input">
+                <button id="submitBtn" class="btn-send" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16798925 C3.34915502,0.9108918 2.40734225,1.02405416 1.77946707,1.4953463 C0.994623095,2.13399899 0.837654326,3.0765833 1.15159189,3.86207098 L3.03521743,10.3030639 C3.03521743,10.4601613 3.19218622,10.6172587 3.50612381,10.6172587 L16.6915026,11.4027456 C16.6915026,11.4027456 17.1624089,11.4027456 17.1624089,12 C17.1624089,12.5972544 16.6915026,12.4744748 16.6915026,12.4744748 Z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
 </section>
